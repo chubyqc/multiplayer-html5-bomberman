@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>chatServlet</servlet-name>
+    <servlet-class>chubyqc.bomberman.server.ChatServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>chatServlet</servlet-name>
+    <url-pattern>/multiplayer_html5_bomberman/chat</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Multiplayer_html5_bomberman.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
