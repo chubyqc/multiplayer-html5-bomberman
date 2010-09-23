@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/chubyqc/Apps/jetty-distribution-7.1.6.v20100715/lib/jetty-websocket-7.1.6.v20100715.jar"/>
-	<classpathentry kind="lib" path="/home/chubyqc/workspace/multiplayer-html5-bomberman/war/WEB-INF/lib/gwt-websockets-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/chubyqc/workspace/multiplayer-html5-bomberman/war/WEB-INF/lib/gwt-websockets-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER/GWT (2)"/>
+	<classpathentry kind="lib" path="C:/Users/chubyqc/workspace/multiplayer-html5-bomberman/war/WEB-INF/lib/jetty-websocket-7.1.6.v20100715.jar"/>
+	<classpathentry kind="lib" path="C:/Users/chubyqc/workspace/multiplayer-html5-bomberman/war/WEB-INF/lib/gwt-incubator-20100204-r1747.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='multiplayer_html5_bomberman'>
   <inherits name='com.google.gwt.user.User'/>
-  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
   <inherits name='com.sunshineapps.gwt.websockets.gwtwebsockets'/>
   
   <entry-point class='chubyqc.bomberman.client.EntryPoint'/>
