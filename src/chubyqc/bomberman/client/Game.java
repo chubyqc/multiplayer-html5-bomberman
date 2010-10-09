@@ -25,7 +25,7 @@ public class Game {
     private Label _frameRateLabel;
     
     private Timer _drawer;
-    private List<IDrawable> _elementsToDraw;
+    private List<AbstractDrawable> _elementsToDraw;
     private long _previousTime;
     private long _now;
     private int _waitTime;
@@ -36,14 +36,19 @@ public class Game {
     Game(Panel container, GWTCanvas canvas) {
         _container = container;
         _canvas = canvas;
-        _elementsToDraw = new LinkedList<IDrawable>();
+        _elementsToDraw = new LinkedList<AbstractDrawable>();
         _previousTime = 0;
         initUI();
         initCanvas();
         createLevel();
+        addBomber(new LocalBomber());
         startDrawing();
     }
     
+    private void addBomber(Bomber bomber) {
+        _elementsToDraw.add(bomber);
+    }
+
     private void initUI() {
         _sizeTextBox = new TextBox();
         _sizeTextBox.setText(String.valueOf(SIZE_DEFAULT));
@@ -91,10 +96,12 @@ public class Game {
             
             @Override
             public void run() {
-                for (IDrawable element : _elementsToDraw) {
-                    element.draw(_canvas);
-                    scheduleNextFrame();
-                    showFrameRate();
+                for (AbstractDrawable element : _elementsToDraw) {
+                    if (element.needRedraw()) {
+                        element.draw(_canvas);
+                        scheduleNextFrame();
+                        showFrameRate();
+                    }
                 }
             }
         };

@@ -2,7 +2,7 @@ package chubyqc.bomberman.client;
 
 import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
-public class Block implements IDrawable {
+public class Block extends AbstractDrawable {
     private int _x;
     private int _y;
     private int _size;
@@ -13,7 +13,12 @@ public class Block implements IDrawable {
         _size = size;
     }
     
-    public void draw(GWTCanvas canvas) {
+    public void doDraw(GWTCanvas canvas) {
         canvas.fillRect(_x, _y, _size, _size);
+    }
+    
+    @Override
+    public boolean needRedraw() {
+        return false;
     }
 }
