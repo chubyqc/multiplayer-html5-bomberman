@@ -1,11 +1,8 @@
 package chubyqc.bomberman.client;
 
-import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
+import com.google.gwt.widgetideas.graphics.client.Color;
 
 public class Block extends AbstractDrawable {
-    private int _x;
-    private int _y;
-    private int _size;
     
     Block(int x, int y, int size) {
         _x = x;
@@ -13,8 +10,9 @@ public class Block extends AbstractDrawable {
         _size = size;
     }
     
-    public void doDraw(GWTCanvas canvas) {
-        canvas.fillRect(_x, _y, _size, _size);
+    public void doDraw(State state) {
+        state.getCanvas().setFillStyle(Color.BLACK);
+        state.getCanvas().fillRect(_x, _y, _size, _size);
     }
     
     @Override

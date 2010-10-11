@@ -9,7 +9,8 @@ public class LocalBomber extends Bomber {
     private static final int KEY_UP = 38;
     private static final int KEY_RIGHT = 39;
     
-    public LocalBomber() {
+    public LocalBomber(Level level) {
+        super(level);
         Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
             
             @Override

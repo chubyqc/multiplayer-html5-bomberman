@@ -11,7 +11,6 @@ import com.google.gwt.widgetideas.graphics.client.Color;
 import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
 public class Game {
-    private static final int WAIT_TIME_MAX = 1000 / 20;
     private static final int SIZE_DEFAULT = 400;
     private static final int BLOCK_SIZE_DEFAULT = 50;
     private static final int PATH_WIDTH = 50;
@@ -26,10 +25,7 @@ public class Game {
     
     private Timer _drawer;
     private List<AbstractDrawable> _elementsToDraw;
-    private long _previousTime;
-    private long _now;
-    private int _waitTime;
-    private int _frameTime;
+    private Level _level;
     
     private long _previousFramerateShow;
     
@@ -37,11 +33,10 @@ public class Game {
         _container = container;
         _canvas = canvas;
         _elementsToDraw = new LinkedList<AbstractDrawable>();
-        _previousTime = 0;
         initUI();
         initCanvas();
         createLevel();
-        addBomber(new LocalBomber());
+        addBomber(new LocalBomber(_level));
         startDrawing();
     }
     
@@ -71,41 +66,39 @@ public class Game {
         int size = Integer.parseInt(_sizeTextBox.getText());
         int margins = MARGINS * 2;
         _canvas.resize(size + margins, size + margins);
-        _elementsToDraw.add(new Level(size, 
+        _elementsToDraw.add(_level = new Level(size, 
             Integer.parseInt(_blockSizeTextBox.getText()),
             Integer.parseInt(_pathWidthTextBox.getText())));
     }
     
-    private void scheduleNextFrame() {
-        _now = System.currentTimeMillis();
-        _frameTime = (int)(_now - _previousTime);
-        _waitTime = Math.max(1, WAIT_TIME_MAX - _frameTime);
-        _previousTime = _now;
-        _drawer.schedule(_waitTime);
-    }
-    
-    private void showFrameRate() {
+    private void showFrameRate(State state) {
         if (System.currentTimeMillis() - _previousFramerateShow > 1000) {
-            _frameRateLabel.setText(String.valueOf(1000 / _frameTime));
+            _frameRateLabel.setText(String.valueOf(state.getFrameRate()));
             _previousFramerateShow = System.currentTimeMillis();
         }
     }
     
+    private void scheduleNextFrame(State state) {
+        state.scheduleNextFrame();
+        _drawer.schedule(state.getWaitTime());
+    }
+    
     private void startDrawing() {
+        final State state = new State(_canvas);
         _drawer = new Timer() {
             
             @Override
             public void run() {
                 for (AbstractDrawable element : _elementsToDraw) {
                     if (element.needRedraw()) {
-                        element.draw(_canvas);
-                        scheduleNextFrame();
-                        showFrameRate();
+                        element.draw(state);
                     }
                 }
+                scheduleNextFrame(state);
+                _drawer.schedule(state.getWaitTime());
+                showFrameRate(state);
             }
         };
-        _previousTime = System.currentTimeMillis();
-        scheduleNextFrame();
+        scheduleNextFrame(state);
     }
 }

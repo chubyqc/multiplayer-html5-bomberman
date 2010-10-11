@@ -1,11 +1,11 @@
 package chubyqc.bomberman.client;
 
 import com.google.gwt.widgetideas.graphics.client.Color;
-import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
 public class Bomber extends AbstractDrawable {
     
-    private static final int SIZE = 10;
+    private static final int SIZE = 35;
+    private static final float SPEED = .1f; // Pixel per millisecond
 
     private static final int DIRECTION_UP = 0;
     private static final int DIRECTION_LEFT = 1;
@@ -15,42 +15,60 @@ public class Bomber extends AbstractDrawable {
     private static final int NOT_MOVING = -1;
     
     private int _movingDirection;
-    private int _x;
-    private int _y;
+    private Level _level;
+    private float _unusedStep;
     
-    Bomber() {
+    Bomber(Level level) {
+        _level = level;
         _movingDirection = -1;
         _x = 0;
         _y = 0;
+        _size = SIZE;
+        _unusedStep = 0f;
     }
 
     @Override
-    public void doDraw(GWTCanvas canvas) {
-        canvas.setFillStyle(Color.WHITE);
-        canvas.fillRect(_x, _y, SIZE, SIZE);
-        canvas.setFillStyle(Color.GREEN);
-        canvas.fillRect(getX(), getY(), SIZE, SIZE);
+    public void doDraw(State state) {
+        computeNewPosition(state);
+        state.getCanvas().setFillStyle(Color.GREEN);
+        state.getCanvas().fillRect(_x, _y, _size, _size);
     }
     
+    private void computeNewPosition(State state) {
+        int step = getStep(state.getFrameTime());
+        int x = getNewX(step), y = getNewY(step);
+        if (!_level.overlap(x, y, _size)) {
+            _x = x;
+            _y = y;
+        }
+    }
+    
+    private int getStep(long elapsedTime) {
+        float step = elapsedTime * SPEED + _unusedStep;
+        int trueStep = (int)step;
+        _unusedStep = step - trueStep;
+        return trueStep;
+    }
+
     @Override
     public boolean needRedraw() {
         return true;
     }
     
-    private int getX() {
+    private int getNewX(int step) {
         if (isMovingLeft()) {
-            --_x;
+            return _x - step;
         } else if (isMovingRight()) {
-            ++_x;
+            return _x + step;
         }
         return _x;
     }
     
-    private int getY() {
+    private int getNewY(int step) {
         if (isMovingUp()) {
-            --_y;
+            return _y - step;
         } else if (isMovingDown()) {
-            ++_y;
+            return _y + step;
         }
         return _y;
     }
