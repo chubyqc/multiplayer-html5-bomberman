@@ -1,7 +1,6 @@
 package chubyqc.bomberman.client;
 
 import com.google.gwt.widgetideas.graphics.client.Color;
-import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
 abstract class AbstractDrawable implements IDrawable {
 
@@ -9,9 +8,15 @@ abstract class AbstractDrawable implements IDrawable {
     protected int _y;
     protected int _size;
     
-    private void reset(GWTCanvas canvas) {
-        canvas.setFillStyle(Color.WHITE);
-        canvas.fillRect(_x, _y, _size, _size);
+    protected AbstractDrawable(int x, int y, int size) {
+        _x = x;
+        _y = y;
+        _size = size;
+    }
+    
+    protected void reset(State state) {
+        state.getCanvas().setFillStyle(Color.WHITE);
+        state.getCanvas().fillRect(_x, _y, _size, _size);
     }
     
     protected boolean overlap(int x, int y, int size) {
@@ -21,7 +26,7 @@ abstract class AbstractDrawable implements IDrawable {
     
     public void draw(State state) {
         state.getCanvas().saveContext();
-        reset(state.getCanvas());
+        reset(state);
         doDraw(state);
         state.getCanvas().restoreContext();
     }

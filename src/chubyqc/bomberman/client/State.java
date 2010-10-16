@@ -39,4 +39,8 @@ public class State {
         _waitTime = Math.max(1, WAIT_TIME_MAX - _frameTime);
         _previousTime = now;
     }
+    
+    long now() {
+        return _previousTime;
+    }
 }

@@ -1,5 +1,10 @@
 package chubyqc.bomberman.client;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.google.gwt.widgetideas.graphics.client.Color;
 
 public class Bomber extends AbstractDrawable {
@@ -17,14 +22,16 @@ public class Bomber extends AbstractDrawable {
     private int _movingDirection;
     private Level _level;
     private float _unusedStep;
+    private Set<Bomb> _bombs;
+    private int _halfSize;
     
     Bomber(Level level) {
+        super(0, 0, SIZE);
+        _halfSize = SIZE / 2;
         _level = level;
         _movingDirection = -1;
-        _x = 0;
-        _y = 0;
-        _size = SIZE;
         _unusedStep = 0f;
+        _bombs = new HashSet<Bomb>();
     }
 
     @Override
@@ -32,6 +39,22 @@ public class Bomber extends AbstractDrawable {
         computeNewPosition(state);
         state.getCanvas().setFillStyle(Color.GREEN);
         state.getCanvas().fillRect(_x, _y, _size, _size);
+        drawBombs(state);
+    }
+    
+    private void drawBombs(State state) {
+        List<Bomb> toRemove = new ArrayList<Bomb>();
+        for (Bomb bomb : _bombs) {
+            if (bomb.exploded()) {
+                toRemove.add(bomb);
+                bomb.reset(state);
+            } else {
+                bomb.draw(state);
+            }
+        }
+        for (Bomb bomb : toRemove) {
+            _bombs.remove(bomb);
+        }
     }
     
     private void computeNewPosition(State state) {
@@ -73,23 +96,29 @@ public class Bomber extends AbstractDrawable {
         return _y;
     }
     
+    protected void dropBomb() {
+        if (_bombs.size() < 2) {
+            _bombs.add(new Bomb(_x + _halfSize, _y + _halfSize, _level));
+        }
+    }
+    
     protected void notMoving() {
         _movingDirection = NOT_MOVING;
     }
     
-    void moveUp() {
+    protected void moveUp() {
         _movingDirection = DIRECTION_UP; 
     }
     
-    void moveLeft() {
+    protected void moveLeft() {
         _movingDirection = DIRECTION_LEFT;
     }
     
-    void moveRight() {
+    protected void moveRight() {
         _movingDirection = DIRECTION_RIGHT;
     }
     
-    void moveDown() {
+    protected void moveDown() {
         _movingDirection = DIRECTION_DOWN;
     }
     

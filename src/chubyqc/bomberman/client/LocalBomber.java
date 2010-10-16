@@ -8,6 +8,7 @@ public class LocalBomber extends Bomber {
     private static final int KEY_LEFT = 37;
     private static final int KEY_UP = 38;
     private static final int KEY_RIGHT = 39;
+    private static final int KEY_SPACE = 32;
     
     public LocalBomber(Level level) {
         super(level);
@@ -35,6 +36,8 @@ public class LocalBomber extends Bomber {
             moveUp();
         } else if (keyCode == KEY_RIGHT) {
             moveRight();
+        } else if (keyCode == KEY_SPACE) {
+            dropBomb();
         }
     }
     

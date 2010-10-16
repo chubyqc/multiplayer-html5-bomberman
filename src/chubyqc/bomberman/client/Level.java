@@ -5,14 +5,13 @@ import java.util.List;
 
 public class Level extends AbstractDrawable {
     
-    private int _size;
     private int _blockSize;
     private int _pathWidth;
     private boolean _needRedraw;
     private List<Block> _blocks;
     
     Level(int size, int blockSize, int pathWidth) {
-        _size = size;
+        super(0, 0, size);
         _blockSize = blockSize;
         _pathWidth = pathWidth;
         _needRedraw = true;
@@ -43,5 +42,11 @@ public class Level extends AbstractDrawable {
             }
         }
         return false;
+    }
+
+    void restrict(int[] xYWidthHeight, int xCenter, int yCenter) {
+        for (Block block : _blocks) {
+            block.restrict(xYWidthHeight, xCenter, yCenter);
+        }
     }
 }
