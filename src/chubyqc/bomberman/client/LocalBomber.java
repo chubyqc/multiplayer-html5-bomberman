@@ -1,5 +1,6 @@
 package chubyqc.bomberman.client;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 
 public class LocalBomber extends Bomber {
@@ -10,12 +11,15 @@ public class LocalBomber extends Bomber {
     private static final int KEY_RIGHT = 39;
     private static final int KEY_SPACE = 32;
     
+    private HandlerRegistration _listener;
+    
     public LocalBomber(Level level) {
         super(level);
-        Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
+        _listener = Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
             
             @Override
             public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
+                
                 if ((event.getTypeInt() & Event.KEYEVENTS) != 0) {
                     if (event.getTypeInt() == Event.ONKEYDOWN) {
                         handleKeyDown(event.getNativeEvent().getKeyCode());
@@ -45,5 +49,12 @@ public class LocalBomber extends Bomber {
         if (keyCode == KEY_DOWN || keyCode == KEY_RIGHT || keyCode == KEY_LEFT || keyCode == KEY_UP) {
             notMoving();
         }
+    }
+    
+    @Override
+    void died(Bomb killedBy) {
+        super.died(killedBy);
+        _listener.removeHandler();
+        notMoving();
     }
 }

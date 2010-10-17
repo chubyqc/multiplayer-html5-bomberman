@@ -13,13 +13,14 @@ public class Bomb extends AbstractDrawable {
     private long _now;
     private boolean _exploded;
     private Level _level;
-    private int[] xYWidthHeight;
+    private int[][] _explosionParts;
+    private boolean _explosionDrawn;
     
     public Bomb(int x, int y, Level level) {
         super(x - SIZE / 2, y - SIZE / 2, SIZE);
         _level = level;
         _dropTime = System.currentTimeMillis();
-        xYWidthHeight = new int[4];
+        _explosionParts = new int[2][4];
     }
 
     @Override
@@ -39,17 +40,23 @@ public class Bomb extends AbstractDrawable {
     private boolean explode(State state) {
         if (!exploded() && _now - _dropTime >= BOMB_TIME - EXPLOSION_TIME) {
             drawExplosion(state);
+            if (!_explosionDrawn) {
+                _explosionDrawn = true;
+                state.getGame().bombExploded(state, this);
+            }
             return true;
         }
         return false;
     }
     
     private void drawExplosion(State state) {
-        drawExplosionPart(state, _x + _size / 2 - EXPLOSION_LENGTH / 2, _y, EXPLOSION_LENGTH, _size);
-        drawExplosionPart(state, _x, _y + _size / 2 - EXPLOSION_LENGTH / 2, _size, EXPLOSION_LENGTH);
+        drawExplosionPart(state, 0, _x + _size / 2 - EXPLOSION_LENGTH / 2, _y, EXPLOSION_LENGTH, _size);
+        drawExplosionPart(state, 1, _x, _y + _size / 2 - EXPLOSION_LENGTH / 2, _size, EXPLOSION_LENGTH);
     }
 
-    private void drawExplosionPart(State state, int x, int y, int width, int height) {
+    private void drawExplosionPart(State state, int explosionIndex, 
+        int x, int y, int width, int height) {
+        int[] xYWidthHeight = _explosionParts[explosionIndex];
         xYWidthHeight[0] = x;
         xYWidthHeight[1] = y;
         xYWidthHeight[2] = width;
@@ -60,7 +67,7 @@ public class Bomb extends AbstractDrawable {
     }
 
     boolean exploded() {
-        return _exploded = (_now - _dropTime >= BOMB_TIME);
+        return _exploded || (_exploded = (_now - _dropTime >= BOMB_TIME));
     }
     
     @Override
@@ -69,5 +76,20 @@ public class Bomb extends AbstractDrawable {
         if (_exploded) {
             drawExplosion(state);
         }
+    }
+    
+    @Override
+    protected boolean overlap(AbstractDrawable drawable) {
+        return overlapExplosionPart(drawable, 0) ||
+            overlapExplosionPart(drawable, 1);
+    }
+
+    private boolean overlapExplosionPart(AbstractDrawable drawable, int explosionIndex) {
+        int[] xYWidthHeight = _explosionParts[explosionIndex];
+        return overlap(xYWidthHeight[0], 
+            xYWidthHeight[1], 
+            xYWidthHeight[2], 
+            xYWidthHeight[3], 
+            drawable._x, drawable._y, drawable._size, drawable._size);
     }
 }

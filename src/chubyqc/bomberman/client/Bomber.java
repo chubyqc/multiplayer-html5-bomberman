@@ -24,6 +24,7 @@ public class Bomber extends AbstractDrawable {
     private float _unusedStep;
     private Set<Bomb> _bombs;
     private int _halfSize;
+    private Bomb _killedBy;
     
     Bomber(Level level) {
         super(0, 0, SIZE);
@@ -136,5 +137,22 @@ public class Bomber extends AbstractDrawable {
     
     boolean isMovingDown() {
         return _movingDirection == DIRECTION_DOWN; 
+    }
+
+    void died(Bomb killedBy) {
+        _killedBy = killedBy;
+    }
+    
+    @Override
+    public boolean shouldRemove() {
+        return _killedBy != null && _killedBy.exploded();
+    }
+    
+    @Override
+    protected void reset(State state) {
+        super.reset(state);
+        for (Bomb bomb : _bombs) {
+            bomb.reset(state);
+        }
     }
 }

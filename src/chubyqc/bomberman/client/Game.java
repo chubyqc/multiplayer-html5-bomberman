@@ -1,7 +1,9 @@
 package chubyqc.bomberman.client;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
@@ -15,6 +17,7 @@ public class Game {
     private static final int BLOCK_SIZE_DEFAULT = 50;
     private static final int PATH_WIDTH = 50;
     private static final int MARGINS = 1;
+    
     private Panel _container;
     private GWTCanvas _canvas;
 
@@ -24,7 +27,8 @@ public class Game {
     private Label _frameRateLabel;
     
     private Timer _drawer;
-    private List<AbstractDrawable> _elementsToDraw;
+    private Set<AbstractDrawable> _elementsToDraw;
+    private Set<Bomber> _bombers;
     private Level _level;
     
     private long _previousFramerateShow;
@@ -32,7 +36,8 @@ public class Game {
     Game(Panel container, GWTCanvas canvas) {
         _container = container;
         _canvas = canvas;
-        _elementsToDraw = new LinkedList<AbstractDrawable>();
+        _elementsToDraw = new HashSet<AbstractDrawable>();
+        _bombers = new HashSet<Bomber>();
         initUI();
         initCanvas();
         createLevel();
@@ -42,6 +47,7 @@ public class Game {
     
     private void addBomber(Bomber bomber) {
         _elementsToDraw.add(bomber);
+        _bombers.add(bomber);
     }
 
     private void initUI() {
@@ -84,15 +90,22 @@ public class Game {
     }
     
     private void startDrawing() {
-        final State state = new State(_canvas);
+        final State state = new State(_canvas, this);
+        final List<AbstractDrawable> toRemove = new ArrayList<AbstractDrawable>();
         _drawer = new Timer() {
             
             @Override
             public void run() {
                 for (AbstractDrawable element : _elementsToDraw) {
-                    if (element.needRedraw()) {
+                    if (element.shouldRemove()) {
+                        element.reset(state);
+                        toRemove.add(element);
+                    } else if (element.needRedraw()) {
                         element.draw(state);
                     }
+                }
+                for (AbstractDrawable element : toRemove) {
+                    _elementsToDraw.remove(element);
                 }
                 scheduleNextFrame(state);
                 _drawer.schedule(state.getWaitTime());
@@ -100,5 +113,13 @@ public class Game {
             }
         };
         scheduleNextFrame(state);
+    }
+    
+    void bombExploded(State state, Bomb bomb) {
+        for (Bomber bomber : _bombers) {
+            if (bomb.overlap(bomber)) {
+                bomber.died(bomb);
+            }
+        }
     }
 }
