@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.widgetideas.graphics.client.Color;
 import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
-public class Game {
+public class Game implements INetworkListener {
     private static final int SIZE_DEFAULT = 400;
     private static final int BLOCK_SIZE_DEFAULT = 50;
     private static final int PATH_WIDTH = 50;
@@ -33,7 +33,7 @@ public class Game {
     
     private long _previousFramerateShow;
     
-    Game(Panel container, GWTCanvas canvas) {
+    Game(String id, Panel container, GWTCanvas canvas) {
         _container = container;
         _canvas = canvas;
         _elementsToDraw = new HashSet<AbstractDrawable>();
@@ -41,11 +41,15 @@ public class Game {
         initUI();
         initCanvas();
         createLevel();
-        addBomber(new LocalBomber(_level));
+        
+        Network network = new Network(id, this, _level);
+        bomberJoined(new LocalBomber(_level, network));
+        
         startDrawing();
     }
-    
-    private void addBomber(Bomber bomber) {
+
+    @Override
+    public void bomberJoined(Bomber bomber) {
         _elementsToDraw.add(bomber);
         _bombers.add(bomber);
     }

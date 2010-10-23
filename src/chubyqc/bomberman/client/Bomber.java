@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.google.gwt.widgetideas.graphics.client.Color;
 
-public class Bomber extends AbstractDrawable {
+public class Bomber extends AbstractDrawable implements IBomber {
     
     private static final int SIZE = 35;
     private static final float SPEED = .1f; // Pixel per millisecond
@@ -97,29 +97,29 @@ public class Bomber extends AbstractDrawable {
         return _y;
     }
     
-    protected void dropBomb() {
+    public void dropBomb() {
         if (_bombs.size() < 2) {
             _bombs.add(new Bomb(_x + _halfSize, _y + _halfSize, _level));
         }
     }
     
-    protected void notMoving() {
+    public void notMoving() {
         _movingDirection = NOT_MOVING;
     }
     
-    protected void moveUp() {
+    public void moveUp() {
         _movingDirection = DIRECTION_UP; 
     }
     
-    protected void moveLeft() {
+    public void moveLeft() {
         _movingDirection = DIRECTION_LEFT;
     }
     
-    protected void moveRight() {
+    public void moveRight() {
         _movingDirection = DIRECTION_RIGHT;
     }
     
-    protected void moveDown() {
+    public void moveDown() {
         _movingDirection = DIRECTION_DOWN;
     }
     

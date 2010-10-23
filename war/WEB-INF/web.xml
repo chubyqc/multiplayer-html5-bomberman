@@ -7,22 +7,13 @@
 
 	<!-- Servlets -->
 	<servlet>
-		<servlet-name>chatServlet</servlet-name>
-		<servlet-class>chubyqc.bomberman.server.ChatServlet</servlet-class>
+		<servlet-name>bombermanServlet</servlet-name>
+		<servlet-class>chubyqc.bomberman.server.BombermanServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>chatServlet</servlet-name>
-		<url-pattern>/multiplayer_html5_bomberman/chat</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>remoteLoggingServiceImpl</servlet-name>
-		<servlet-class>com.google.gwt.libideas.logging.server.RemoteLoggingServiceImpl</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>remoteLoggingServiceImpl</servlet-name>
-		<url-pattern>/multiplayer_html5_bomberman/logging</url-pattern>
+		<servlet-name>bombermanServlet</servlet-name>
+		<url-pattern>/multiplayer_html5_bomberman/bomberman</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->
