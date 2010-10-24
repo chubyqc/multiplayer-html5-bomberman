@@ -26,8 +26,8 @@ public class Bomber extends AbstractDrawable implements IBomber {
     private int _halfSize;
     private Bomb _killedBy;
     
-    Bomber(Level level) {
-        super(0, 0, SIZE);
+    Bomber(Level level, int x, int y) {
+        super(x, y, SIZE);
         _halfSize = SIZE / 2;
         _level = level;
         _movingDirection = -1;
@@ -67,7 +67,7 @@ public class Bomber extends AbstractDrawable implements IBomber {
         }
     }
     
-    private int getStep(long elapsedTime) {
+    protected int getStep(long elapsedTime) {
         float step = elapsedTime * SPEED + _unusedStep;
         int trueStep = (int)step;
         _unusedStep = step - trueStep;

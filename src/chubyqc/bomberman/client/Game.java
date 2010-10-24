@@ -32,6 +32,7 @@ public class Game implements INetworkListener {
     private Level _level;
     
     private long _previousFramerateShow;
+    private State _state;
     
     Game(String id, Panel container, GWTCanvas canvas) {
         _container = container;
@@ -41,10 +42,11 @@ public class Game implements INetworkListener {
         initUI();
         initCanvas();
         createLevel();
-        
-        Network network = new Network(id, this, _level);
+
+        _state = new State(_canvas, this);
+        Network network = new Network(id, this, _level, _state);
         bomberJoined(new LocalBomber(_level, network));
-        
+
         startDrawing();
     }
 
@@ -94,7 +96,6 @@ public class Game implements INetworkListener {
     }
     
     private void startDrawing() {
-        final State state = new State(_canvas, this);
         final List<AbstractDrawable> toRemove = new ArrayList<AbstractDrawable>();
         _drawer = new Timer() {
             
@@ -102,21 +103,21 @@ public class Game implements INetworkListener {
             public void run() {
                 for (AbstractDrawable element : _elementsToDraw) {
                     if (element.shouldRemove()) {
-                        element.reset(state);
+                        element.reset(_state);
                         toRemove.add(element);
                     } else if (element.needRedraw()) {
-                        element.draw(state);
+                        element.draw(_state);
                     }
                 }
                 for (AbstractDrawable element : toRemove) {
                     _elementsToDraw.remove(element);
                 }
-                scheduleNextFrame(state);
-                _drawer.schedule(state.getWaitTime());
-                showFrameRate(state);
+                scheduleNextFrame(_state);
+                _drawer.schedule(_state.getWaitTime());
+                showFrameRate(_state);
             }
         };
-        scheduleNextFrame(state);
+        scheduleNextFrame(_state);
     }
     
     void bombExploded(State state, Bomb bomb) {

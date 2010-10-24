@@ -12,11 +12,14 @@ public class LocalBomber extends Bomber {
     private static final int KEY_SPACE = 32;
     
     private HandlerRegistration _listener;
-    private IBomber _network;
+    private Network _network;
+    private int _currentKeyDown;
     
-    public LocalBomber(Level level, IBomber network) {
-        super(level);
+    public LocalBomber(Level level, Network network) {
+        super(level, 0, 0);
         _network = network;
+        _network.setBomber(this);
+        _currentKeyDown = -1;
         _listener = Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
             
             @Override
@@ -24,8 +27,13 @@ public class LocalBomber extends Bomber {
                 
                 if ((event.getTypeInt() & Event.KEYEVENTS) != 0) {
                     if (event.getTypeInt() == Event.ONKEYDOWN) {
-                        handleKeyDown(event.getNativeEvent().getKeyCode());
+                        int keyCode = event.getNativeEvent().getKeyCode();
+                        if (_currentKeyDown != keyCode) {
+                            _currentKeyDown = keyCode;
+                            handleKeyDown(event.getNativeEvent().getKeyCode());
+                        }
                     } else if (event.getTypeInt() == Event.ONKEYUP) {
+                        _currentKeyDown = -1;
                         handleKeyUp(event.getNativeEvent().getKeyCode());
                     }
                 }
@@ -64,5 +72,13 @@ public class LocalBomber extends Bomber {
         super.died(killedBy);
         _listener.removeHandler();
         notMoving();
+    }
+    
+    int getX() {
+        return _x;
+    }
+    
+    int getY() {
+        return _y;
     }
 }

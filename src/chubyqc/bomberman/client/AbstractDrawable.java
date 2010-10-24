@@ -15,6 +15,10 @@ abstract class AbstractDrawable implements IDrawable {
     }
     
     protected void reset(State state) {
+        simpleReset(state);
+    }
+    
+    protected void simpleReset(State state) {
         state.getCanvas().setFillStyle(Color.WHITE);
         state.getCanvas().fillRect(_x, _y, _size, _size);
     }
