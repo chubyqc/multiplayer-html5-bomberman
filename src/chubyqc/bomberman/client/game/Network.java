@@ -1,4 +1,4 @@
-package chubyqc.bomberman.client;
+package chubyqc.bomberman.client.game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,12 +86,7 @@ public class Network implements IBomber {
         sendWithPosition(A_DROPBOMB);
     }
     
-    private native void test(String action) /*-{
-        console.log(action);
-    }-*/;
-    
     private void sendWithPosition(String action) {
-        test(action);
         send(action, _bomber.getX(), _bomber.getY());
     }
     

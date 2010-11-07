@@ -1,4 +1,4 @@
-package chubyqc.bomberman.client;
+package chubyqc.bomberman.client.game;
 
 public class Utils {
     private static Utils _instance = new Utils();

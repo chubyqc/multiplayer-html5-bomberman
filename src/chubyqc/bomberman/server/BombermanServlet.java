@@ -1,55 +1,33 @@
 package chubyqc.bomberman.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocket.Outbound;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
 public class BombermanServlet extends WebSocketServlet {
     
     private static final long serialVersionUID = 1L;
     
-    private Collection<Outbound> _clients;
-    
-    public BombermanServlet() {
-        _clients = Collections.synchronizedCollection(new ArrayList<WebSocket.Outbound>());
-    }
-    
     class BombermanWebSocket implements WebSocket {
         
         private Outbound _outbound;
+        private Game _game;
         
+        public BombermanWebSocket(Game game) {
+            _game = game;
+        }
+
         public void onConnect(Outbound outbound) {
-            _clients.add(_outbound = outbound);
+            _game.addClient(_outbound = outbound);
         }
         
         public void onMessage(byte frame, String data) {
-            synchronized (_clients) {
-                for (Outbound client : _clients) {
-                    if (client != _outbound && client.isOpen()) {
-                        try {
-                            client.sendMessage(data);
-                        }
-                        catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            try {
-                _outbound.sendMessage("");
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+            _game.sendMessage(_outbound, data);
         }
         
         public void onDisconnect() {
@@ -59,7 +37,7 @@ public class BombermanServlet extends WebSocketServlet {
     }
     
     protected WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-        return new BombermanWebSocket();
+        return new BombermanWebSocket((Game)request.getSession().getAttribute("game"));
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

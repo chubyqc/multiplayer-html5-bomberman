@@ -1,4 +1,4 @@
-package chubyqc.bomberman.client;
+package chubyqc.bomberman.client.game;
 
 public class RemoteBomber extends Bomber {
 

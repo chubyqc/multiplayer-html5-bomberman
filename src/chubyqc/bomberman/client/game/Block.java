@@ -1,4 +1,4 @@
-package chubyqc.bomberman.client;
+package chubyqc.bomberman.client.game;
 
 import com.google.gwt.widgetideas.graphics.client.Color;
 

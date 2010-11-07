@@ -1,4 +1,4 @@
-package chubyqc.bomberman.client;
+package chubyqc.bomberman.client.game;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class Game implements INetworkListener {
     private long _previousFramerateShow;
     private State _state;
     
-    Game(String id, Panel container, GWTCanvas canvas) {
+    public Game(String id, Panel container, GWTCanvas canvas) {
         _container = container;
         _canvas = canvas;
         _elementsToDraw = new HashSet<AbstractDrawable>();
@@ -58,12 +58,15 @@ public class Game implements INetworkListener {
 
     private void initUI() {
         _sizeTextBox = new TextBox();
+        _sizeTextBox.setVisible(false);
         _sizeTextBox.setText(String.valueOf(SIZE_DEFAULT));
         _container.add(_sizeTextBox);
         _blockSizeTextBox = new TextBox();
+        _blockSizeTextBox.setVisible(false);
         _blockSizeTextBox.setText(String.valueOf(BLOCK_SIZE_DEFAULT));
         _container.add(_blockSizeTextBox);
         _pathWidthTextBox = new TextBox();
+        _pathWidthTextBox.setVisible(false);
         _pathWidthTextBox.setText(String.valueOf(PATH_WIDTH));
         _container.add(_pathWidthTextBox);
         _container.add(_frameRateLabel = new Label());
