@@ -9,7 +9,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.widgetideas.graphics.client.Color;
 import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
 public class Game implements INetworkListener {
@@ -40,7 +39,6 @@ public class Game implements INetworkListener {
         _elementsToDraw = new HashSet<AbstractDrawable>();
         _bombers = new HashSet<Bomber>();
         initUI();
-        initCanvas();
         createLevel();
 
         _state = new State(_canvas, this);
@@ -70,11 +68,6 @@ public class Game implements INetworkListener {
         _pathWidthTextBox.setText(String.valueOf(PATH_WIDTH));
         _container.add(_pathWidthTextBox);
         _container.add(_frameRateLabel = new Label());
-    }
-    
-    private void initCanvas() {
-        _canvas.setLineWidth(1);
-        _canvas.setStrokeStyle(Color.BLACK);
     }
     
     private void createLevel() {

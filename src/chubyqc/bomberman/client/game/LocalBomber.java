@@ -16,7 +16,7 @@ public class LocalBomber extends Bomber {
     private int _currentKeyDown;
     
     public LocalBomber(Level level, Network network) {
-        super(level, 0, 0);
+        super(level, 1, 1);
         _network = network;
         _network.setBomber(this);
         _currentKeyDown = -1;

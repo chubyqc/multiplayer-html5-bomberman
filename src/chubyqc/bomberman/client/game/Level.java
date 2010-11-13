@@ -19,7 +19,7 @@ public class Level extends AbstractDrawable {
     }
     
     public void doDraw(State state) {
-        state.getCanvas().strokeRect(1, 1, _size, _size);
+        state.getCanvas().strokeRect(0, 0, _size, _size);
         for (int i = _pathWidth; i < _size - _pathWidth; i += _blockSize + _pathWidth) {
             for (int j = _pathWidth; j < _size - _pathWidth; j += _blockSize + _pathWidth) {
                 Block block = new Block(i, j, _blockSize);
@@ -36,6 +36,9 @@ public class Level extends AbstractDrawable {
     }
     
     protected boolean overlap(int x, int y, int size) {
+        if (x <= 0 || y <= 0 || x + size >= _size || y + size >= _size) {
+            return true;
+        }
         for (Block block : _blocks) {
             if (block.overlap(x, y, size)) {
                 return true;

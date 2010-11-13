@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -22,6 +23,7 @@ public class GameCreator {
     private BombermanServiceAsync _service;
     private VerticalPanel _panel;
     private GWTCanvas _canvas;
+    private ListBox _existingGames;
     
     public GameCreator() {
         _service = GWT.create(BombermanService.class);
@@ -33,13 +35,13 @@ public class GameCreator {
     }
     
     private void createList() {
-        _panel.add(new Label("GAMES:"));
+        _existingGames.addItem("none");
         _service.getGames(new AsyncCallback<Collection<String>>() {
             
             @Override
             public void onSuccess(Collection<String> result) {
                 for (String name : result) {
-                    _panel.add(new Label(name));
+                    _existingGames.addItem(name);
                 }
             }
             
@@ -73,9 +75,13 @@ public class GameCreator {
     private void createForm() {
         final TextBox nameField = new TextBox();
         final PasswordTextBox passwordField = new PasswordTextBox();
-        final TextBox usernameField = new PasswordTextBox();
-        _panel.add(new Label("Game name:"));
+        final TextBox usernameField = new TextBox();
+        _existingGames = new ListBox(false);
+        
+        _panel.add(new Label("New game name:"));
         _panel.add(nameField);
+        _panel.add(new Label("Existing game name:"));
+        _panel.add(_existingGames);
         _panel.add(new Label("Game password:"));
         _panel.add(passwordField);
         _panel.add(new Label("Username:"));
@@ -92,8 +98,8 @@ public class GameCreator {
         _panel.add(new Button("Join", new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                _service.joinGame(nameField.getText(), passwordField.getText(), 
-                    usernameField.getText(), callback);
+                _service.joinGame(_existingGames.getItemText(_existingGames.getSelectedIndex()),
+                    passwordField.getText(), usernameField.getText(), callback);
             }
         }));
     }
